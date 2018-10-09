@@ -64,7 +64,7 @@ $(document).ready(function(){
         if(app.player1Selected === true && app.player2Selected === true) {
             app.alert("2 PLAYERS ARE READY LETS GO", true, 2500);
             startCountDown(app, function(){
-                console.log("The countdown is over");
+                console.log("BOTH PLAYERS HAVE HIT");
             });
         }
     });
@@ -187,7 +187,6 @@ $(document).ready(function(){
 
     firebase.database().ref('/rpsMultiplayer/players/0/signEmit').on('value', function(snapshot){
         if(snapshot.val().length > 0) {
-            $("#player-1-status").text(snapshot.val());
             app.alert("Player 1 shot: " + snapshot.val(), true, 2500);
             app.player1LastSign = snapshot.val();
         }
@@ -195,7 +194,6 @@ $(document).ready(function(){
 
     firebase.database().ref('/rpsMultiplayer/players/1/signEmit').on('value', function(snapshot){
         if(snapshot.val().length > 0) {
-            $("#player-2-status").text(snapshot.val());
             app.alert("Player 2 shot: " + snapshot.val(), true, 2500);
             app.player2LastSign = snapshot.val();
         }
@@ -203,6 +201,9 @@ $(document).ready(function(){
 });
 
 function startCountDown(app, callBack) {
+    $("#player-1-status").text('');
+    $("#player-2-status").text('');
+
     var second = 4;
     var signMap = {
         '4': 'Rock',
@@ -219,7 +220,8 @@ function startCountDown(app, callBack) {
         
         if(app.player1LastSign.length > 0 && app.player2LastSign.length > 0) {
             clearInterval(intervalId);
-            callBack();
+            $("#player-1-status").text(app.player1LastSign);
+            $("#player-2-status").text(app.player2LastSign);
         }
     }, 1000);
 }

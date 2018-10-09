@@ -14,6 +14,20 @@ $(document).ready(function(){
     var player1Ref = firebase.database().ref('/rpsMultiplayer/players/0/');
     var player2Ref = firebase.database().ref('/rpsMultiplayer/players/1/');
 
+    $("#clear-lobby-btn").on("click", function(){
+        $("#current-player-text").text("");
+
+        player1Ref.update({
+            'active': false,
+            'id': ''
+        });
+
+        player2Ref.update({
+            'active': false,
+            'id': ''
+        });
+    });
+
     app.alert("TEST MESSAGE", true, 2500);
 
     // PLAYER CHANGE EVENTS
@@ -40,6 +54,8 @@ $(document).ready(function(){
                 player1Ref.update({
                     'active': true,
                     'id': app.id
+                }).then(function(){
+                    $("#current-player-text").text("Player 1");
                 });
             } else {
                 $('#player1-btn').hide();
@@ -53,6 +69,8 @@ $(document).ready(function(){
                 player2Ref.update({
                     'active': true,
                     'id': app.id
+                }).then(function(){
+                    $("#current-player-text").text("Player 2");
                 });
             } else {
                 $('#player2-btn').hide();

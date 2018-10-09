@@ -37,16 +37,28 @@ $(document).ready(function(){
     player1Ref.on('value', function(snapshot){
         if(snapshot.val().active === true) {
             $('#player1-btn').hide();
+            app.player1Selected = true;
         } else {
             $('#player1-btn').show();
+            app.player1Selected = false;
+        }
+
+        if(app.player1Selected === true && app.player2Selected === true) {
+            app.alert("2 PLAYERS ARE READY LETS GO", true, 2500);
         }
     });
 
     player2Ref.on('value', function(snapshot){
         if(snapshot.val().active === true) {
             $('#player2-btn').hide();
+            app.player2Selected = true;
         } else {
             $('#player2-btn').show();
+            app.player2Selected = false;
+        }
+
+        if(app.player1Selected === true && app.player2Selected === true) {
+            app.alert("2 PLAYERS ARE READY LETS GO", true, 2500);
         }
     });
 
@@ -98,10 +110,6 @@ $(document).ready(function(){
         } else {
             $("#player2-btn").show();
         }
-    });
-
-    firebase.database().ref('/rpsMultiplayer/players/Player2Active').once('value').then(function(snapshot){
-
     });
 
     $("#rock-btn").on("click", function(){
@@ -166,8 +174,15 @@ $(document).ready(function(){
 
     firebase.database().ref('/rpsMultiplayer/players/0/signEmit').on('value', function(snapshot){
         if(snapshot.val().length > 0) {
+            $("#player-1-status").text(snapshot.val());
             app.alert("Player 1 shot: " + snapshot.val(), true, 2500);
         }
     });
-});
 
+    firebase.database().ref('/rpsMultiplayer/players/1/signEmit').on('value', function(snapshot){
+        if(snapshot.val().length > 0) {
+            $("#player-2-status").text(snapshot.val());
+            app.alert("Player 2 shot: " + snapshot.val(), true, 2500);
+        }
+    });
+});

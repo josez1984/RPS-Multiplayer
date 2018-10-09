@@ -14,17 +14,20 @@ $(document).ready(function(){
     var player1Ref = firebase.database().ref('/rpsMultiplayer/players/0/');
     var player2Ref = firebase.database().ref('/rpsMultiplayer/players/1/');
 
+    // CLEAR THE LOBBY BUTTON
     $("#clear-lobby-btn").on("click", function(){
         $("#current-player-text").text("");
 
         player1Ref.update({
             'active': false,
-            'id': ''
+            'id': '',
+            'signEmit': ''
         });
 
         player2Ref.update({
             'active': false,
-            'id': ''
+            'id': '',
+            'signEmit': ''
         });
     });
 
@@ -56,6 +59,7 @@ $(document).ready(function(){
                     'id': app.id
                 }).then(function(){
                     $("#current-player-text").text("Player 1");
+                    app.currentPlayer = 1;
                 });
             } else {
                 $('#player1-btn').hide();
@@ -71,6 +75,7 @@ $(document).ready(function(){
                     'id': app.id
                 }).then(function(){
                     $("#current-player-text").text("Player 2");
+                    app.currentPlayer = 2;
                 });
             } else {
                 $('#player2-btn').hide();
@@ -100,15 +105,69 @@ $(document).ready(function(){
     });
 
     $("#rock-btn").on("click", function(){
-        console.log("Rock");
+        if(app.currentPlayer === 1) {
+            player1Ref.update({
+                'signEmit': 'rock'
+            }).then(function(){
+                player1Ref.update({
+                    'signEmit': ''
+                })  
+            });
+        } else if(app.currentPlayer === 2) {
+            player2Ref.update({
+                'signEmit': 'rock'
+            }).then(function(){
+                player2Ref.update({
+                    'signEmit': ''
+                })  
+            });
+        }
     });
 
     $("#paper-btn").on("click",function(){
-        console.log("Paper");
+        if(app.currentPlayer === 1) {
+            player1Ref.update({
+                'signEmit': 'paper'
+            }).then(function(){
+                player1Ref.update({
+                    'signEmit': ''
+                })  
+            });
+        } else if(app.currentPlayer === 2) {
+            player2Ref.update({
+                'signEmit': 'paper'
+            }).then(function(){
+                player2Ref.update({
+                    'signEmit': ''
+                })  
+            });
+        }
     });
 
     $("#scissor-btn").on("click",function(){
-        console.log("Scissor");
+        if(app.currentPlayer === 1) {
+            player1Ref.update({
+                'signEmit': 'scissor'
+            }).then(function(){
+                player1Ref.update({
+                    'signEmit': ''
+                })  
+            });
+        } else if(app.currentPlayer === 2) {
+            player2Ref.update({
+                'signEmit': 'scissor'
+            }).then(function(){
+                player2Ref.update({
+                    'signEmit': ''
+                })  
+            });
+        }
+    });
+
+    firebase.database().ref('/rpsMultiplayer/players/0/signEmit').on('value', function(snapshot){
+        if(snapshot.val().length > 0) {
+            app.alert("Player 1 shot: " + snapshot.val(), true, 2500);
+        }
     });
 });
 

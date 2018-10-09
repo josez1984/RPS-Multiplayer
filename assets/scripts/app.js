@@ -4,6 +4,8 @@ function App(params) {
     this.player1Selected = false;
     this.player2Selected = false; 
     this.alert = alert;   
+    this.player1LastSign = '';
+    this.player2LastSign = '';
 }
 
 function alert(message, autoClose, autoCloseTime) {

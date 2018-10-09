@@ -21,17 +21,17 @@ $(document).ready(function(){
         player1Ref.update({
             'active': false,
             'id': '',
-            'signEmit': ''
+            'signEmit': '',
+            'lastSignEmit': ''
         });
 
         player2Ref.update({
             'active': false,
             'id': '',
-            'signEmit': ''
+            'signEmit': '',
+            'lastSignEmit': ''
         });
     });
-
-    app.alert("TEST MESSAGE", true, 2500);
 
     // PLAYER CHANGE EVENTS
     player1Ref.on('value', function(snapshot){
@@ -45,6 +45,10 @@ $(document).ready(function(){
 
         if(app.player1Selected === true && app.player2Selected === true) {
             app.alert("2 PLAYERS ARE READY LETS GO", true, 2500);
+            startCountDown(app, function(){
+                console.log("BOTH PLAYERS HAVE HIT");
+
+            });
         }
     });
 
@@ -59,6 +63,9 @@ $(document).ready(function(){
 
         if(app.player1Selected === true && app.player2Selected === true) {
             app.alert("2 PLAYERS ARE READY LETS GO", true, 2500);
+            startCountDown(app, function(){
+                console.log("The countdown is over");
+            });
         }
     });
 
@@ -115,7 +122,8 @@ $(document).ready(function(){
     $("#rock-btn").on("click", function(){
         if(app.currentPlayer === 1) {
             player1Ref.update({
-                'signEmit': 'rock'
+                'signEmit': 'rock',
+                'lastSignEmit': 'rock'
             }).then(function(){
                 player1Ref.update({
                     'signEmit': ''
@@ -123,7 +131,8 @@ $(document).ready(function(){
             });
         } else if(app.currentPlayer === 2) {
             player2Ref.update({
-                'signEmit': 'rock'
+                'signEmit': 'rock',
+                'lastSignEmit': 'rock'
             }).then(function(){
                 player2Ref.update({
                     'signEmit': ''
@@ -135,7 +144,8 @@ $(document).ready(function(){
     $("#paper-btn").on("click",function(){
         if(app.currentPlayer === 1) {
             player1Ref.update({
-                'signEmit': 'paper'
+                'signEmit': 'paper',
+                'lastSignEmit': 'paper'
             }).then(function(){
                 player1Ref.update({
                     'signEmit': ''
@@ -143,7 +153,8 @@ $(document).ready(function(){
             });
         } else if(app.currentPlayer === 2) {
             player2Ref.update({
-                'signEmit': 'paper'
+                'signEmit': 'paper',
+                'lastSignEmit': 'paper'
             }).then(function(){
                 player2Ref.update({
                     'signEmit': ''
@@ -155,7 +166,8 @@ $(document).ready(function(){
     $("#scissor-btn").on("click",function(){
         if(app.currentPlayer === 1) {
             player1Ref.update({
-                'signEmit': 'scissor'
+                'signEmit': 'scissor',
+                'lastSignEmit': 'scissor'
             }).then(function(){
                 player1Ref.update({
                     'signEmit': ''
@@ -163,7 +175,8 @@ $(document).ready(function(){
             });
         } else if(app.currentPlayer === 2) {
             player2Ref.update({
-                'signEmit': 'scissor'
+                'signEmit': 'scissor',
+                'lastSignEmit': 'scissor'
             }).then(function(){
                 player2Ref.update({
                     'signEmit': ''
@@ -176,6 +189,7 @@ $(document).ready(function(){
         if(snapshot.val().length > 0) {
             $("#player-1-status").text(snapshot.val());
             app.alert("Player 1 shot: " + snapshot.val(), true, 2500);
+            app.player1LastSign = snapshot.val();
         }
     });
 
@@ -183,6 +197,29 @@ $(document).ready(function(){
         if(snapshot.val().length > 0) {
             $("#player-2-status").text(snapshot.val());
             app.alert("Player 2 shot: " + snapshot.val(), true, 2500);
+            app.player2LastSign = snapshot.val();
         }
     });
 });
+
+function startCountDown(app, callBack) {
+    var second = 4;
+    var signMap = {
+        '4': 'Rock',
+        '3': 'Paper',
+        '2': 'Scissor',
+        '1': 'Shoot'
+    };
+
+    var intervalId = setInterval(function(){        
+        if(second > 0) {
+            $("#timer-text").text(signMap[second]);
+            second--;
+        } 
+        
+        if(app.player1LastSign.length > 0 && app.player2LastSign.length > 0) {
+            clearInterval(intervalId);
+            callBack();
+        }
+    }, 1000);
+}

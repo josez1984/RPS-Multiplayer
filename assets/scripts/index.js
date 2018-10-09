@@ -46,10 +46,7 @@ $(document).ready(function(){
         if(app.gameInProgress === 0) {
             if(app.player1Selected === true && app.player2Selected === true) {
                 app.gameInProgress = 1;
-                startCountDown(app, function(){
-                    console.log("BOTH PLAYERS HAVE HIT");
-                    app.gameInProgress = 0;
-                });
+                startCountDown(app);
             }
         }
     });
@@ -66,10 +63,7 @@ $(document).ready(function(){
         if(app.gameInProgress === 0) {
             if(app.player1Selected === true && app.player2Selected === true) {
                 app.gameInProgress = 1;
-                startCountDown(app, function(){
-                    console.log("BOTH PLAYERS HAVE HIT");
-                    app.gameInProgress = 0;
-                });
+                startCountDown(app);
             }
         }
     });
@@ -222,9 +216,12 @@ function startCountDown(app, callBack) {
         } 
         
         if(app.player1LastSign.length > 0 && app.player2LastSign.length > 0) {
-            clearInterval(intervalId);
             $("#player-1-status").text(app.player1LastSign);
             $("#player-2-status").text(app.player2LastSign);
+            setTimeout(function(){
+                app.gameInProgress = 0;
+            }, 3000);
+            clearInterval(intervalId);
         }
     }, 1000);
 }

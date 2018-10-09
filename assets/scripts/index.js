@@ -43,12 +43,14 @@ $(document).ready(function(){
             app.player1Selected = false;
         }
 
-        if(app.player1Selected === true && app.player2Selected === true) {
-            app.alert("2 PLAYERS ARE READY LETS GO", true, 2500);
-            startCountDown(app, function(){
-                console.log("BOTH PLAYERS HAVE HIT");
-
-            });
+        if(app.gameInProgress === 0) {
+            if(app.player1Selected === true && app.player2Selected === true) {
+                app.gameInProgress = 1;
+                startCountDown(app, function(){
+                    console.log("BOTH PLAYERS HAVE HIT");
+                    app.gameInProgress = 0;
+                });
+            }
         }
     });
 
@@ -61,11 +63,14 @@ $(document).ready(function(){
             app.player2Selected = false;
         }
 
-        if(app.player1Selected === true && app.player2Selected === true) {
-            app.alert("2 PLAYERS ARE READY LETS GO", true, 2500);
-            startCountDown(app, function(){
-                console.log("BOTH PLAYERS HAVE HIT");
-            });
+        if(app.gameInProgress === 0) {
+            if(app.player1Selected === true && app.player2Selected === true) {
+                app.gameInProgress = 1;
+                startCountDown(app, function(){
+                    console.log("BOTH PLAYERS HAVE HIT");
+                    app.gameInProgress = 0;
+                });
+            }
         }
     });
 
@@ -187,14 +192,12 @@ $(document).ready(function(){
 
     firebase.database().ref('/rpsMultiplayer/players/0/signEmit').on('value', function(snapshot){
         if(snapshot.val().length > 0) {
-            app.alert("Player 1 shot: " + snapshot.val(), true, 2500);
             app.player1LastSign = snapshot.val();
         }
     });
 
     firebase.database().ref('/rpsMultiplayer/players/1/signEmit').on('value', function(snapshot){
         if(snapshot.val().length > 0) {
-            app.alert("Player 2 shot: " + snapshot.val(), true, 2500);
             app.player2LastSign = snapshot.val();
         }
     });

@@ -218,10 +218,48 @@ function startCountDown(app, callBack) {
         if(app.player1LastSign.length > 0 && app.player2LastSign.length > 0) {
             $("#player-1-status").text(app.player1LastSign);
             $("#player-2-status").text(app.player2LastSign);
+            checkWinner(app);
             setTimeout(function(){
                 app.gameInProgress = 0;
             }, 3000);
             clearInterval(intervalId);
         }
     }, 1000);
+}
+
+function checkWinner(app) {
+    var whoWon = 0;
+
+    if(app.player1LastSign === app.player2LastSign) {
+        return 0;
+    }
+
+    if(app.player1LastSign === 'paper' && app.player2LastSign === 'rock') {
+        whoWon = 1;
+    } else if(app.player1LastSign === 'rock' && app.player2LastSign === 'scissor') {
+        whoWon = 1;
+    } else if(app.player1LastSign === 'scissor' && app.player2LastSign === 'paper') {
+        whoWon = 1;
+    }
+
+    // PLAYER 2
+    if(app.player2LastSign === 'paper' && app.player1LastSign === 'rock') {
+        whoWon = 2;
+    } else if(app.player2LastSign === 'rock' && app.player1LastSign === 'scissor') {
+        whoWon = 2;
+    } else if(app.player2LastSign === 'scissor' && app.player1LastSign === 'paper') {
+        whoWon = 2;
+    }
+
+    if(app.currentPlayer === 1 && whoWon === 1) {
+        $("#timer-text").text("You Won");
+    } else if(app.currentPlayer === 2 && whoWon === 2) {
+        $("#timer-text").text("You Won");
+    }
+    
+    if(app.currentPlayer === 1 && whoWon === 2) {
+        $("#timer-text").text("You Lost");
+    } else if(app.currentPlayer === 2 && whoWon === 1) {
+        $("#timer-text").text("You Lost");
+    }
 }
